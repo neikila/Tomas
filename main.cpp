@@ -96,19 +96,28 @@ private:
     bool isFreeFlag;
     double advanceTime;
     int num;
+    double timeBusy;
+    int detailProceded;
 public:
     Machine(double prob, double advTime, int numm = 0):
             defectProbability(prob),
             isFreeFlag(true),
             advanceTime(advTime),
-            num(numm) {};
+            num(numm),
+            timeBusy(0.0),
+            detailProceded(0) {};
 
     int getNum() { return num; }
+    double getTimeBusy() { return timeBusy; }
+    double getDetailProceded() { return detailProceded; }
 
     bool process(Detail & detail) {
         if (isFreeFlag) {
             isFreeFlag = false;
-            detail.time += Generate(advanceTime);
+            ++detailProceded;
+            double temp = Generate(advanceTime);
+            timeBusy += temp;
+            detail.time += temp;
             detail.process(*this);
             return true;
         }
@@ -310,7 +319,20 @@ public:
             for (auto const &detail: getCBS()) {
                 cout << detail << endl;
             }
+
+        cout << endl << "Machines usage" << endl;
+        printDetailedInfoAboutMachine(machine1);
         cout << endl;
+        printDetailedInfoAboutMachine(machine2);
+        cout << endl;
+    }
+
+    void printDetailedInfoAboutMachine(Machine& machine) {
+        cout << "Machine #" << machine.getNum() <<". Total: ";
+        outputTime(machine.getTimeBusy());
+        cout << endl << "Busy " << machine.getTimeBusy() / getTime() * 100 << "% of all modelling time." << endl;
+        cout << "Detail proceded " << machine.getDetailProceded() <<
+        ". Time per detail: " << machine.getTimeBusy() / machine.getDetailProceded() << endl;
     }
 };
 
@@ -337,6 +359,7 @@ int main() {
 
         model.print(true);
     }
+    cout << "Machine usage" << endl;
 }
 
 void testExponential() {
