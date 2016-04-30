@@ -359,7 +359,6 @@ int main() {
 
         model.print(true);
     }
-    cout << "Machine usage" << endl;
 }
 
 void testExponential() {
