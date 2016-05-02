@@ -14,7 +14,7 @@ class Machine;
 class Detail;
 ostream& operator << (ostream& out, Detail chain);
 double Generate(double t) {
-    return -1 * t * log((double)((rand() + 1) % 1000) / 1000.0);
+    return -1 * t * log((double)(rand() % 1000 + 1) / 1000.0);
 }
 
 enum State {
